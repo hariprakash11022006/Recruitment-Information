@@ -5,27 +5,39 @@
   <title>Recruitment Event Timeline</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    /* Duolingo-inspired Color Palette */
+    :root {
+      --primary-green: #78c800;
+      --dark-green: #58a700;
+      --light-green-bg: #e5f7d9;
+      --text-green: #4c9a00;
+      --white: #ffffff;
+      --medium-gray-text: #777;
+      --dark-gray-text: #333;
+      --cancel-hover-bg: #e0e0e0;
+    }
+
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f2f2f2;
+      background: #f7f7f7;
     }
     .timer-container {
       width: 100%;
-      background: linear-gradient(90deg, #2b5876 0%, #4e4376 100%);
-      color: #fff;
+      background: linear-gradient(90deg, var(--primary-green) 0%, var(--dark-green) 100%);
+      color: var(--white);
       padding: 28px 0 16px 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      box-shadow: 0 2px 12px 0 rgba(44,62,80,0.08);
+      box-shadow: 0 2px 12px 0 rgba(88,167,0,0.15);
       margin-bottom: 8px;
     }
     #big-timer {
       font-size: 2.1rem;
       font-weight: bold;
-      text-shadow: 0 2px 8px #3333;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.2);
       letter-spacing: 1.4px;
       margin-bottom: 0px;
       font-family: 'Segoe UI Mono', monospace;
@@ -34,13 +46,14 @@
     #ist-label {
       font-size: 1.15rem;
       margin-top: 0px;
-      color: #ffecb3;
+      color: var(--light-green-bg);
       letter-spacing: 2px;
+      opacity: 0.9;
     }
     h1 {
       text-align: center;
       margin: 18px 0 10px 0;
-      color: #333;
+      color: var(--dark-gray-text);
       letter-spacing: 2px;
       font-size: 2.1rem;
     }
@@ -54,46 +67,47 @@
       position: relative;
       margin: 0 32px;
       padding-left: 38px;
-      border-left: 4px solid #2b5876;
+      border-left: 4px solid var(--primary-green);
     }
     .timeline-event {
       position: relative;
-      margin-bottom: 44px;
-      background: #fff;
+      margin-bottom: 22px; 
+      background: var(--white);
       border-radius: 12px;
-      box-shadow: 0 2px 12px 0 rgba(44,62,80,0.08);
-      padding: 18px 32px 18px 56px;
-      transition: box-shadow 0.2s;
+      box-shadow: 0 2px 8px 0 rgba(0,0,0,0.06);
+      padding: 14px 28px 14px 56px;
+      transition: box-shadow 0.2s, transform 0.2s;
     }
     .timeline-event:hover {
-      box-shadow: 0 8px 24px 0 rgba(44,62,80,0.16);
+      box-shadow: 0 6px 18px 0 rgba(88,167,0,0.15);
+      transform: translateY(-2px);
     }
     .timeline-dot {
       content: "";
       position: absolute;
       left: -46px;
-      top: 22px;
+      top: 18px;
       width: 24px;
       height: 24px;
-      background: #fff;
+      background: var(--white);
       border-radius: 50%;
       z-index: 2;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 0 6px #e0e7ef, 0 2px 10px 0 #2b587655;
+      box-shadow: 0 0 0 6px var(--light-green-bg), 0 2px 10px 0 rgba(0,0,0,0.2);
     }
     .timeline-dot-inner {
       width: 16px;
       height: 16px;
-      background: linear-gradient(135deg,#2b5876,#4e4376 80%);
+      background: linear-gradient(135deg,var(--primary-green),var(--dark-green) 80%);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 1px 4px 0 #2b587633;
+      box-shadow: 0 1px 4px 0 rgba(0,0,0,0.2);
       font-size: 1.18rem;
-      color: #fff;
+      color: var(--white);
       position: relative;
     }
     .timeline-event.past .timeline-dot-inner {
@@ -101,216 +115,108 @@
       color: #aaa;
     }
     .timeline-event.past {
-      opacity: 0.7;
-      filter: grayscale(30%);
+      opacity: 0.75;
+      filter: grayscale(40%);
     }
+    .timeline-event span, .timeline-event div { margin-bottom: 2px; }
     .event-date {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: bold;
-      color: #2b5876;
+      color: var(--text-green);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .event-title {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--dark-gray-text);
       margin-bottom: 6px;
       display: block;
     }
-    .event-time {
-      font-size: 0.99rem;
-      color: #47627b;
-      margin-bottom: 4px;
-      display: block;
+    .details-line {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    .event-title {
-      font-size: 1.08rem;
-      font-weight: 500;
-      color: #333;
-      margin-bottom: 2px;
-      letter-spacing: 0.2px;
+    .event-time {
+      font-size: 0.98rem;
+      color: #555;
+    }
+    .event-duration {
+      font-size: 0.9rem;
+      color: var(--medium-gray-text);
+      font-style: italic;
     }
     .event-location {
-      font-size: 0.93rem;
-      color: #777;
+      font-size: 0.95rem;
+      color: var(--medium-gray-text);
       font-style: italic;
+      padding-top: 4px;
     }
     .timeline-actions {
       position: absolute;
       right: 18px;
-      top: 18px;
+      top: 14px;
       display: flex;
       gap: 8px;
     }
     .action-btn {
-      background: #f2f2f2;
-      color: #2b5876;
-      border: none;
+      background: #f1f1f1;
+      color: var(--text-green);
+      border: 1px solid #ddd;
       border-radius: 4px;
       padding: 2px 10px;
       font-size: 0.92rem;
       cursor: pointer;
-      transition: background 0.2s, color 0.2s;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
     }
     .action-btn:hover {
-      background: #d53369;
-      color: #fff;
+      background: var(--dark-green);
+      border-color: var(--dark-green);
+      color: var(--white);
     }
     #addEventBtn {
       display: block;
       margin: 0 auto 30px auto;
       padding: 12px 28px;
       font-size: 1.04rem;
-      background: linear-gradient(135deg, #2b5876 30%, #4e4376 100%);
-      color: #fff;
+      background: linear-gradient(135deg, var(--primary-green) 30%, var(--dark-green) 100%);
+      color: var(--white);
       border: none;
       border-radius: 8px;
       cursor: pointer;
       font-weight: 600;
       letter-spacing: 1px;
-      box-shadow: 0 2px 10px 0 rgba(44,62,80,0.14);
+      box-shadow: 0 2px 10px 0 rgba(0,0,0,0.1);
       transition: background 0.2s, box-shadow 0.2s;
     }
     #addEventBtn:hover {
-      background: linear-gradient(135deg, #d53369 40%, #cbad6d 100%);
-      box-shadow: 0 8px 24px 0 rgba(44,62,80,0.22);
-      color: #fff;
+      background: linear-gradient(135deg, var(--dark-green) 40%, var(--primary-green) 100%);
+      box-shadow: 0 8px 24px 0 rgba(88,167,0,0.22);
     }
-    /* Modal Styles */
-    .modal-bg {
-      display: none;
-      position: fixed;
-      z-index: 99;
-      left: 0; top: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(44,62,80,0.14);
-      align-items: center;
-      justify-content: center;
-    }
-    .modal {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 6px 40px rgba(44,62,80,0.22);
-      padding: 34px 30px 28px 30px;
-      min-width: 320px;
-      max-width: 94vw;
-      position: relative;
-    }
-    .modal h2 {
-      text-align: center;
-      font-size: 1.2rem;
-      margin: 0 0 18px 0;
-      color: #2b5876;
-    }
-    .modal label {
-      display: block;
-      margin: 10px 0 2px 0;
-      font-size: 1rem;
-      color: #47627b;
-    }
-    .modal input, .modal select {
-      width: 100%;
-      padding: 7px 8px;
-      border: 1px solid #bbb;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      font-size: 1rem;
-      background: #f9fafb;
-      box-sizing: border-box;
-    }
-    .modal input[type="time"] {
-      width: auto;
-      min-width: 120px;
-    }
-    .modal .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .modal .modal-btn {
-      padding: 7px 18px;
-      border: none;
-      border-radius: 5px;
-      font-size: 0.98rem;
-      cursor: pointer;
-      font-weight: 500;
-      transition: background 0.2s, color 0.2s;
-    }
-    .modal .modal-btn.confirm {
-      background: linear-gradient(135deg, #2b5876 30%, #4e4376 100%);
-      color: #fff;
-    }
-    .modal .modal-btn.confirm:hover {
-      background: linear-gradient(135deg, #d53369 40%, #cbad6d 100%);
-      color: #fff;
-    }
-    .modal .modal-btn.cancel {
-      background: #f4f4f4;
-      color: #333;
-    }
-    .modal .modal-btn.cancel:hover {
-      background: #d53369;
-      color: #fff;
-    }
+    .modal-bg { display: none; position: fixed; z-index: 99; left: 0; top: 0; width: 100vw; height: 100vh; background: rgba(44,62,80,0.14); align-items: center; justify-content: center; }
+    .modal { background: var(--white); border-radius: 10px; box-shadow: 0 6px 40px rgba(0,0,0,0.15); padding: 34px 30px 28px 30px; min-width: 320px; max-width: 94vw; position: relative; }
+    .modal h2 { text-align: center; font-size: 1.2rem; margin: 0 0 18px 0; color: var(--text-green); }
+    .modal label { display: block; margin: 10px 0 2px 0; font-size: 1rem; color: #47627b; }
+    .modal input { width: 100%; padding: 7px 8px; border: 1px solid #bbb; border-radius: 5px; margin-bottom: 10px; font-size: 1rem; background: #f9fafb; box-sizing: border-box; }
+    .modal .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 12px; }
+    .modal .modal-btn { padding: 7px 18px; border: none; border-radius: 5px; font-size: 0.98rem; cursor: pointer; font-weight: 500; transition: background 0.2s, color 0.2s; }
+    .modal .modal-btn.confirm { background: linear-gradient(135deg, var(--primary-green) 30%, var(--dark-green) 100%); color: var(--white); }
+    .modal .modal-btn.confirm:hover { background: linear-gradient(135deg, var(--dark-green) 40%, var(--primary-green) 100%); }
+    .modal .modal-btn.cancel { background: #f4f4f4; color: var(--dark-gray-text); }
+    .modal .modal-btn.cancel:hover { background: var(--cancel-hover-bg); color: var(--dark-gray-text); }
     
-    /* ======== NEW: Mobile Responsive Styles ======== */
     @media (max-width: 600px) {
-      body {
-          -webkit-text-size-adjust: 100%; /* Prevents text zooming */
-      }
-      .timer-container {
-          padding: 16px 8px 12px 8px; /* Adjust padding for mobile */
-      }
-      #big-timer {
-          font-size: 1.25rem;
-          letter-spacing: 1px;
-          line-height: 1.4; /* Allow text to wrap nicely */
-      }
-      #ist-label {
-          font-size: 0.9rem;
-      }
-      h1 {
-          font-size: 1.5rem; /* Better title hierarchy on mobile */
-      }
-      .timeline-container {
-          padding: 16px 0;
-      }
-      .timeline {
-          margin: 0 16px;
-          padding-left: 28px;
-          border-left-width: 3px;
-      }
-      .timeline-dot {
-          left: -43px; /* Adjusted for new padding and border */
-          top: 18px;
-          width: 20px;
-          height: 20px;
-          box-shadow: 0 0 0 4px #e0e7ef;
-      }
-      .timeline-dot-inner {
-          width: 12px;
-          height: 12px;
-      }
-      .timeline-event {
-          padding: 16px; /* Simpler padding */
-          padding-left: 24px;
-          display: flex;
-          flex-direction: column; /* Stack event info vertically */
-          align-items: flex-start;
-      }
-      .timeline-actions {
-          position: static; /* No longer absolute */
-          align-self: flex-end; /* Pushes buttons to the right */
-          margin-top: 12px; /* Space between text and buttons */
-      }
-      /* Make modals more touch-friendly */
-      .modal {
-        padding: 24px 20px 20px 20px;
-      }
-      .modal input, .modal select {
-          padding: 12px 10px; /* Bigger tap target */
-          font-size: 1rem;
-      }
-      #addEventBtn {
-          padding: 14px 24px;
-          font-size: 1.1rem;
-          width: calc(100% - 32px);
-      }
+      body { -webkit-text-size-adjust: 100%; }
+      #big-timer { font-size: 1.25rem; letter-spacing: 1px; line-height: 1.4; }
+      h1 { font-size: 1.5rem; }
+      .timeline { margin: 0 16px; padding-left: 28px; border-left-width: 3px; }
+      .timeline-dot { left: -43px; top: 18px; width: 20px; height: 20px; box-shadow: 0 0 0 4px var(--light-green-bg); }
+      .timeline-dot-inner { width: 12px; height: 12px; }
+      .timeline-event { padding: 16px; padding-left: 24px; flex-direction: column; align-items: flex-start; }
+      .timeline-actions { position: static; align-self: flex-end; margin-top: 12px; }
+      #addEventBtn { padding: 14px 24px; font-size: 1.1rem; width: calc(100% - 32px); }
     }
   </style>
 </head>
@@ -325,7 +231,6 @@
     <div class="timeline" id="timeline"></div>
   </div>
 
-  <!-- Modal for Add/Edit Event -->
   <div class="modal-bg" id="eventModalBg">
     <div class="modal" id="eventModal">
       <h2 id="modalTitle">Add/Edit Event</h2>
@@ -333,8 +238,13 @@
         <input type="hidden" id="eventIndex" />
         <label>Date (e.g. JUL 25, AUG 4):</label>
         <input type="text" id="eventDate" required pattern="^[A-Z]{3} \d{1,2}$" placeholder="JUL 25" />
-        <label>Time:</label>
-        <input type="text" id="eventTime" placeholder="5.00 p.m to 6.00 p.m or NA" />
+        
+        <label>Start Time:</label>
+        <input type="text" id="eventStartTime" placeholder="5:00 PM or NA" />
+        
+        <label>End Time:</label>
+        <input type="text" id="eventEndTime" placeholder="6:00 PM or NA" />
+
         <label>Title/Company:</label>
         <input type="text" id="eventTitle" required placeholder="Goldman Sachs PPT" />
         <label>Location/Mode:</label>
@@ -347,7 +257,6 @@
     </div>
   </div>
 
-  <!-- Passcode Modal -->
   <div class="modal-bg" id="passcodeModalBg">
     <div class="modal">
       <h2>Enter Passcode</h2>
@@ -358,24 +267,20 @@
           <button type="button" class="modal-btn cancel" onclick="closePasscodeModal()">Cancel</button>
           <button type="submit" class="modal-btn confirm">Submit</button>
         </div>
-        <div id="passcodeError" style="color:#d53369; margin-top:6px; display:none;">Incorrect passcode.</div>
+        <div id="passcodeError" style="color:var(--dark-green); margin-top:6px; display:none;">Incorrect passcode.</div>
       </form>
     </div>
   </div>
 
   <script>
-    // --- Helper: IST time ---
     function getISTDateObj(date = new Date()) {
       let utc = date.getTime() + (date.getTimezoneOffset() * 60000);
-      return new Date(utc + 19800000); // UTC+5.5 hours for IST
+      return new Date(utc + 19800000);
     }
     function pad(n) { return n < 10 ? '0' + n : n; }
-    function getDayName(d) {
-      return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d];
-    }
-    function getMonthName(m) {
-      return ['January','February','March','April','May','June','July','August','September','October','November','December'][m];
-    }
+    function getDayName(d) { return ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d]; }
+    function getMonthName(m) { return ['January','February','March','April','May','June','July','August','September','October','November','December'][m]; }
+    
     function renderBigTimer() {
       const nowIST = getISTDateObj();
       const day = getDayName(nowIST.getDay());
@@ -388,131 +293,143 @@
       let ap = hour >= 12 ? 'PM' : 'AM';
       let hour12 = hour % 12;
       if(hour12 === 0) hour12 = 12;
-      hour12 = pad(hour12);
-      document.getElementById('big-timer').textContent = `${day}, ${date} ${month} ${year}, ${hour12}:${min}:${sec} ${ap}`;
+      document.getElementById('big-timer').textContent = `${day}, ${date} ${month} ${year}, ${pad(hour12)}:${min}:${sec} ${ap}`;
     }
 
-    // --- Event Data ---
+    // Default event list with startTime/endTime fields
     const initialEvents = [
-        { date: "JUL 25", time: "5.00 p.m to 6.00 p.m", title: "Goldman Sachs PPT", location: "REMOTE" },
-        { date: "JUL 27", time: "10.00 a.m to 11.00 a.m", title: "Goldman Sachs Test", location: "REMOTE" },
-        { date: "JUL 27", time: "6:00 p.m", title: "BNY Mellon Test", location: "REMOTE" },
-        { date: "JUL 29", time: "6:30 p.m to 9:30 p.m", title: "Appian PPT", location: "REMOTE" },
-        { date: "AUG 3", time: "9.00 a.m", title: "Appian Interview", location: "CUIC" },
-        { date: "AUG 4", time: "11.00 a.m", title: "Barclays Test", location: "REMOTE" },
-        { date: "AUG 4", time: "5.00 p.m", title: "D. E. Shaw Test", location: "CUIC" },
-        { date: "AUG 5", time: "9.00 a.m", title: "D. E. Shaw Interview 1", location: "CUIC" },
-        { date: "AUG 6", time: "9.00 a.m", title: "D. E. Shaw Interview 2", location: "CUIC" },
-        { date: "AUG 6", time: "6.00 p.m", title: "Wells Fargo PPT", location: "REMOTE" },
-        { date: "AUG 8", time: "9.00 a.m", title: "Goldman Sachs Interview", location: "CUIC" },
-        { date: "AUG 8", time: "5.00 p.m", title: "Wells Fargo Test", location: "CUIC" },
-        { date: "AUG 9", time: "5.00 p.m", title: "American Express Test", location: "REMOTE" },
-        { date: "AUG 11", time: "9.00 a.m", title: "Wells Fargo Intern-Interviews", location: "CUIC" },
-        { date: "AUG 11", time: "5.00 p.m", title: "Western Digital Test", location: "REMOTE" },
-        { date: "AUG 12", time: "9.00 a.m", title: "Western Digital PPT & Interview", location: "CUIC" },
-        { date: "AUG 12", time: "9.00 a.m", title: "Wells Fargo FTE-Interviews", location: "CUIC" },
-        { date: "AUG 13", time: "NA", title: "American Express Interview", location: "REMOTE" },
-        { date: "AUG 14", time: "9.00 a.m", title: "Barclays PPT & Interview", location: "CUIC" },
-        { date: "AUG 18", time: "9.00 a.m", title: "BNY Mellon Interview", location: "CUIC" }
+        { date: "JUL 25", startTime: "5:00 PM", endTime: "6:00 PM", title: "Goldman Sachs PPT", location: "REMOTE" },
+        { date: "JUL 27", startTime: "10:00 AM", endTime: "11:00 AM", title: "Goldman Sachs Test", location: "REMOTE" },
+        { date: "JUL 27", startTime: "6:00 PM", endTime: "", title: "BNY Mellon Test", location: "REMOTE" },
+        { date: "AUG 12", startTime: "9:00 AM", endTime: "", title: "Western Digital PPT & Interview", location: "CUIC" },
+        { date: "AUG 12", startTime: "9:00 AM", endTime: "", title: "Wells Fargo FTE-Interviews", location: "CUIC" },
+        { date: "AUG 13", startTime: "NA", endTime: "", title: "American Express Interview", location: "REMOTE" },
+        { date: "AUG 14", startTime: "9:00 AM", endTime: "", title: "Barclays PPT & Interview", location: "CUIC" },
+        { date: "AUG 18", startTime: "9:00 AM", endTime: "", title: "BNY Mellon Interview", location: "CUIC" },
     ];
 
     function getEvents() {
-      let events;
       try {
         let raw = localStorage.getItem('timelineEvents');
         if (!raw || raw === "null" || raw === "undefined") return sortEvents(initialEvents.slice());
-        events = JSON.parse(raw);
-        if (!Array.isArray(events)) return sortEvents(initialEvents.slice());
+        const events = JSON.parse(raw);
+        return Array.isArray(events) ? events : sortEvents(initialEvents.slice());
       } catch { return sortEvents(initialEvents.slice()); }
-      return events; // Events are sorted when saved.
     }
 
     function setEvents(events) {
-        if (!Array.isArray(events)) return;
-        const sortedEvents = sortEvents(events);
-        if (sortedEvents.length === 0) {
-            localStorage.removeItem('timelineEvents');
-        } else {
-            localStorage.setItem('timelineEvents', JSON.stringify(sortedEvents));
-        }
+      if (!Array.isArray(events)) return;
+      const sortedEvents = sortEvents(events);
+      localStorage.setItem('timelineEvents', JSON.stringify(sortedEvents));
+    }
+    
+    function formatTimeForDisplay(dateObj) {
+      if (!dateObj || isNaN(dateObj)) return '';
+      let hour = dateObj.getHours();
+      let min = dateObj.getMinutes();
+      const ap = hour >= 12 ? 'PM' : 'AM';
+      hour %= 12;
+      if (hour === 0) hour = 12;
+      return `${hour}:${pad(min)} ${ap}`;
     }
 
+    function formatDuration(start, end) {
+        if (!start || !end || isNaN(start) || isNaN(end)) return '';
+        let diffMs = end.getTime() - start.getTime();
+        if (diffMs <= 0) return '';
+        
+        diffMs /= 60000;
+        const hours = Math.floor(diffMs / 60);
+        const mins = Math.round(diffMs % 60);
 
-    // --- Smart Date Parsing ---
-    const MONTHS = {
-      "JAN":0,"FEB":1,"MAR":2,"APR":3,"MAY":4,"JUN":5,
-      "JUL":6,"AUG":7,"SEP":8,"OCT":9,"NOV":10,"DEC":11
-    };
+        const parts = [];
+        if (hours > 0) parts.push(`${hours}h`);
+        if (mins > 0) parts.push(`${mins}m`);
+        
+        return parts.join(' ');
+    }
+    
+    // **REVISED** Date/Time parsing function
+    const MONTHS = { "JAN":0,"FEB":1,"MAR":2,"APR":3,"MAY":4,"JUN":5, "JUL":6,"AUG":7,"SEP":8,"OCT":9,"NOV":10,"DEC":11 };
     function parseEventDateTime(evt) {
-      if (!evt.date) return null;
-      let [mon, d] = evt.date.trim().split(" ");
-      if (!mon || !MONTHS.hasOwnProperty(mon.toUpperCase())) return null;
-      let year = getISTDateObj().getFullYear();
-      let m = MONTHS[mon.toUpperCase()];
-      let day = parseInt(d, 10);
+        // Return a consistent object shape, even for invalid data
+        const invalidReturn = { baseDate: null, start: null, end: null, expiry_end: null };
+        if (!evt.date) return invalidReturn;
 
-      // Handle events in the next year (e.g., viewing Dec event in Jan)
-      const now = getISTDateObj();
-      if (now.getMonth() > m) {
-        year += 1;
-      }
-      
-      if (!evt.time || evt.time.trim().toUpperCase() === "NA") {
-        let start = new Date(year, m, day, 0, 0, 0);
-        let end = new Date(year, m, day, 23, 59, 59, 999);
-        return { start, end };
-      }
+        const [mon, d] = evt.date.trim().split(" ");
+        if (!mon || !MONTHS.hasOwnProperty(mon.toUpperCase())) return invalidReturn;
+        
+        let year = getISTDateObj().getFullYear();
+        const m = MONTHS[mon.toUpperCase()];
+        const day = parseInt(d, 10);
+        
+        if (getISTDateObj().getMonth() === 11 && m === 0) year += 1; // Handle year-end wrap-around
+        
+        const baseDate = new Date(year, m, day);
 
-      let times = evt.time.split("to").map(s => s.trim());
-      function parseTime(t) {
-        if (!t) return null;
-        let ampm = t.match(/(a\.?m\.?|p\.?m\.?)/i);
-        let num = t.replace(/[^\d:.]/g, '');
-        let hour = 0, min = 0;
-        if (num.includes(':')) {
-          [hour, min] = num.split(':').map(Number);
-        } else if (num.includes('.')) {
-          [hour, min] = num.split('.').map(Number);
-        } else {
-          hour = parseInt(num, 10);
-        }
-        min = min || 0;
-        if (ampm) {
-          let ap = ampm[0].toLowerCase().replace(/\./g, '');
-          if (ap === 'pm' && hour < 12) hour += 12;
-          if (ap === 'am' && hour === 12) hour = 0;
-        }
-        return { hour, min };
-      }
+        const parseTime = (t) => {
+            if (!t || t.toUpperCase() === "NA" || t.trim() === '') return null;
+            const ampm = t.match(/(a\.?m\.?|p\.?m\.?)/i);
+            const num = t.replace(/[^\d:.]/g, '');
+            if (!num) return null;
 
-      let st = parseTime(times[0]);
-      if (st == null) return null;
-      let start = new Date(year, m, day, st.hour, st.min);
+            let [hour, min] = [0, 0];
+            if (num.includes(':')) [hour, min] = num.split(':').map(Number);
+            else if (num.includes('.')) [hour, min] = num.split('.').map(Number);
+            else hour = parseInt(num, 10);
 
-      let end;
-      if (times.length > 1 && times[1]) {
-        let et = parseTime(times[1]);
-        if (et) {
-          end = new Date(year, m, day, et.hour, et.min);
-        }
-      }
-      if (!end) {
-        end = new Date(start.getTime() + 60 * 60000); // Default 1 hour duration
-      }
-      return { start, end };
+            min = min || 0;
+            if (ampm) {
+                const ap = ampm[0].toLowerCase().replace(/\./g, '');
+                if (ap === 'pm' && hour < 12) hour += 12;
+                if (ap === 'am' && hour === 12) hour = 0;
+            }
+            return new Date(year, m, day, hour, min);
+        };
+
+        const start = parseTime(evt.startTime);
+        const end = parseTime(evt.endTime);
+        const expiry_end = end || (start ? new Date(start.getTime() + 3600*1000) : baseDate); // Use 1hr default for expiry ONLY
+        
+        return { baseDate, start, end, expiry_end };
     }
 
+    // **REVISED** Sorting Function
     function sortEvents(events) {
-      return events.slice().sort((a, b) => {
-        let adt = parseEventDateTime(a);
-        let bdt = parseEventDateTime(b);
-        if (!adt) return 1;
-        if (!bdt) return -1;
-        return adt.start - bdt.start;
-      });
+        return events.slice().sort((a, b) => {
+            const aInfo = parseEventDateTime(a);
+            const bInfo = parseEventDateTime(b);
+
+            if (!aInfo.baseDate) return 1;
+            if (!bInfo.baseDate) return -1;
+            
+            // 1. Primary Sort: Compare by date first.
+            const dateDiff = aInfo.baseDate.getTime() - bInfo.baseDate.getTime();
+            if (dateDiff !== 0) {
+                return dateDiff;
+            }
+
+            // 2. Secondary Sort: Dates are the same, now sort by time.
+            const aHasTime = !!aInfo.start;
+            const bHasTime = !!bInfo.start;
+            
+            if (aHasTime && bHasTime) {
+                // Both have valid times, sort chronologically.
+                return aInfo.start.getTime() - bInfo.start.getTime();
+            } else if (aHasTime && !bHasTime) {
+                // Only 'a' has a time, so 'a' comes first.
+                return -1;
+            } else if (!aHasTime && bHasTime) {
+                // Only 'b' has a time, so 'b' comes first ('a' comes after).
+                return 1;
+            } else {
+                // Neither have a valid time, they are considered equal.
+                return 0;
+            }
+        });
     }
 
-    // --- Render Timeline ---
+
     function renderTimeline() {
       const timeline = document.getElementById('timeline');
       const events = getEvents();
@@ -524,51 +441,57 @@
       const now = getISTDateObj();
       events.forEach((evt, idx) => {
         const parsed = parseEventDateTime(evt);
-        let isPast = false;
-        if(parsed && parsed.end < now) isPast = true;
+        let isPast = parsed.expiry_end ? parsed.expiry_end < now : false;
+        
+        let formattedTime;
+        if (parsed.start && parsed.end) {
+            formattedTime = `${formatTimeForDisplay(parsed.start)} - ${formatTimeForDisplay(parsed.end)}`;
+        } else if (parsed.start) {
+            formattedTime = `Starts: ${formatTimeForDisplay(parsed.start)}`;
+        } else {
+            formattedTime = "Time: NA";
+        }
+
+        let formattedDuration = (parsed.start && parsed.end) ? formatDuration(parsed.start, parsed.end) : "";
+
         const eventDiv = document.createElement('div');
         eventDiv.className = 'timeline-event' + (isPast ? ' past' : '');
         eventDiv.innerHTML = `
-          <div class="timeline-dot">
-            <div class="timeline-dot-inner">${isPast?'<span style="font-size:1.0rem;">✓</span>':''}</div>
-          </div>
+          <div class="timeline-dot"> <div class="timeline-dot-inner">${isPast?'<span style="font-size:1.0rem;">✓</span>':''}</div> </div>
           <span class="event-date">${evt.date}</span>
-          <span class="event-time">${evt.time && evt.time.trim() ? evt.time : 'NA'}</span>
           <span class="event-title">${evt.title}</span>
+          <div class="details-line">
+              <span class="event-time">${formattedTime}</span>
+              ${formattedDuration ? `<span class="event-duration">(${formattedDuration})</span>` : ''}
+          </div>
           <span class="event-location">${evt.location}</span>
           <div class="timeline-actions">
             <button class="action-btn" onclick="requestPasscode('edit', ${idx})" title="Edit">✎</button>
             <button class="action-btn" onclick="requestPasscode('delete', ${idx})" title="Delete"></button>
-          </div>
-        `;
+          </div>`;
         timeline.appendChild(eventDiv);
       });
     }
 
-    // --- Autodelete Old Events ---
-    // **FIXED**: This function now deletes events as soon as they are over.
     function autodeleteOldEvents() {
-      let events = getEvents();
+      const events = getEvents();
       const now = getISTDateObj();
-      let changed = false;
+      const originalLength = events.length;
 
       const filteredEvents = events.filter(evt => {
         const parsed = parseEventDateTime(evt);
-        if (!parsed) return true; // Keep malformed events to be fixed manually
-        // Delete if the event's END time is in the past.
-        if (parsed.end.getTime() < now.getTime()) {
-          changed = true;
-          return false;
-        }
-        return true;
+        if (!parsed.start) return true;
+        const endForExpiry = parsed.end || new Date(parsed.start.getTime() + 24 * 3600 * 1000);
+        return endForExpiry.getTime() >= now.getTime();
       });
-      if (changed) {
+
+      if (filteredEvents.length < originalLength) {
         setEvents(filteredEvents);
         renderTimeline();
       }
     }
 
-    // --- Modal logic ---
+    let pendingAction = null, pendingIdx = null;
     function openModal(isEdit, idx = null) {
       document.getElementById('eventModalBg').style.display = 'flex';
       document.getElementById('eventForm').reset();
@@ -577,98 +500,68 @@
       if (isEdit && idx !== null) {
         const evt = getEvents()[idx];
         document.getElementById('eventDate').value = evt.date;
-        document.getElementById('eventTime').value = evt.time;
+        document.getElementById('eventStartTime').value = evt.startTime || '';
+        document.getElementById('eventEndTime').value = evt.endTime || '';
         document.getElementById('eventTitle').value = evt.title;
         document.getElementById('eventLocation').value = evt.location;
       }
     }
-    function closeModal() {
-      document.getElementById('eventModalBg').style.display = 'none';
-    }
-    document.getElementById('eventModalBg').addEventListener('click', function(e){
-      if(e.target === this) closeModal();
-    });
+    function closeModal() { document.getElementById('eventModalBg').style.display = 'none'; }
 
-    document.getElementById('addEventBtn').onclick = function() {
-      requestPasscode('add');
-    };
-
-    // --- Passcode modal logic ---
-    let pendingAction = null, pendingIdx = null;
     function requestPasscode(action, idx = null) {
-      pendingAction = action;
-      pendingIdx = idx;
+      pendingAction = action; pendingIdx = idx;
       document.getElementById('passcodeInput').value = '';
       document.getElementById('passcodeError').style.display = 'none';
       document.getElementById('passcodeModalBg').style.display = 'flex';
     }
-    function closePasscodeModal() {
-      document.getElementById('passcodeModalBg').style.display = 'none';
-    }
-    document.getElementById('passcodeModalBg').addEventListener('click', function(e){
-      if(e.target === this) closePasscodeModal();
-    });
+    function closePasscodeModal() { document.getElementById('passcodeModalBg').style.display = 'none'; }
+    
     document.getElementById('passcodeForm').onsubmit = function(e) {
       e.preventDefault();
-      const pass = document.getElementById('passcodeInput').value.trim();
-      if(pass === "autism100") {
+      if(document.getElementById('passcodeInput').value.trim() === "autism100") {
         closePasscodeModal();
         if(pendingAction === 'add') openModal(false);
-        if(pendingAction === 'edit') openModal(true, pendingIdx);
-        if(pendingAction === 'delete') deleteEvent(pendingIdx);
-      } else {
-        document.getElementById('passcodeError').style.display = 'block';
-      }
+        else if(pendingAction === 'edit') openModal(true, pendingIdx);
+        else if(pendingAction === 'delete') deleteEvent(pendingIdx);
+      } else { document.getElementById('passcodeError').style.display = 'block'; }
     }
-
-    // Add/Edit event logic
+    
     document.getElementById('eventForm').onsubmit = function(e) {
       e.preventDefault();
       const idx = document.getElementById('eventIndex').value;
-      const date = document.getElementById('eventDate').value.trim().toUpperCase();
-      const time = document.getElementById('eventTime').value.trim() || 'NA';
-      const title = document.getElementById('eventTitle').value.trim();
-      const location = document.getElementById('eventLocation').value.trim();
+      const evtData = {
+        date: document.getElementById('eventDate').value.trim().toUpperCase(),
+        startTime: document.getElementById('eventStartTime').value.trim(),
+        endTime: document.getElementById('eventEndTime').value.trim(),
+        title: document.getElementById('eventTitle').value.trim(),
+        location: document.getElementById('eventLocation').value.trim(),
+      };
       let events = getEvents();
-      if(idx === '') { // Add new event
-        events.push({ date, time, title, location });
-      } else { // Edit existing event
-        events[idx] = { date, time, title, location };
-      }
-      setEvents(events);
-      renderTimeline();
-      closeModal();
+      if(idx === '') events.push(evtData); 
+      else events[idx] = evtData;
+      setEvents(events); renderTimeline(); closeModal();
     };
 
-    // Delete event with confirmation
     function deleteEvent(idx) {
       if (confirm('Are you sure you want to delete this event?')) {
         let events = getEvents();
         events.splice(idx, 1);
-        setEvents(events);
-        renderTimeline();
+        setEvents(events); renderTimeline();
       }
-    }
-
-    // --- Initial load + periodic timers ---
-    function initialize() {
-      renderTimeline();
-      renderBigTimer();
-      setInterval(renderBigTimer, 1000); // Update clock every second
-      // **FIXED**: Check for old events much more frequently.
-      setInterval(autodeleteOldEvents, 10000); // Check every 10 seconds
-      autodeleteOldEvents(); // Also run once on startup
     }
     
+    document.getElementById('addEventBtn').onclick = () => requestPasscode('add');
+    document.getElementById('eventModalBg').addEventListener('click', (e) => { if(e.target === e.currentTarget) closeModal(); });
+    document.getElementById('passcodeModalBg').addEventListener('click', (e) => { if(e.target === e.currentTarget) closePasscodeModal(); });
+    document.addEventListener('keydown', (e) => { if(e.key === "Escape") { closeModal(); closePasscodeModal(); }});
+    
+    function initialize() {
+      renderTimeline(); renderBigTimer();
+      setInterval(renderBigTimer, 1000);
+      setInterval(autodeleteOldEvents, 10000);
+      autodeleteOldEvents();
+    }
     initialize();
-
-    // For accessibility: close modal on ESC key
-    document.addEventListener('keydown', function(e){
-      if(e.key === "Escape") {
-        closeModal();
-        closePasscodeModal();
-      }
-    });
   </script>
 </body>
 </html>
